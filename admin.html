@@ -1,0 +1,2603 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport"
+content="width=device-width, initial-scale=1.0">
+
+<title>ToyMart Admin Panel</title>
+
+<link rel="preconnect"
+href="https://fonts.googleapis.com">
+
+<link rel="preconnect"
+href="https://fonts.gstatic.com" crossorigin>
+
+<link
+href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap"
+rel="stylesheet">
+
+<link
+rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+<!-- FIREBASE -->
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+
+<style>
+
+*{
+    box-sizing:border-box;
+}
+
+body{
+    margin:0;
+    font-family:"Poppins",sans-serif;
+    background:#f5f6f8;
+    color:#222;
+}
+
+/* =========================================================
+   HEADER
+========================================================= */
+
+.admin-header{
+    background:#f85606;
+    color:#fff;
+    padding:20px;
+}
+
+.admin-header-inner{
+    max-width:1250px;
+    margin:auto;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:15px;
+}
+
+.admin-logo{
+    font-size:23px;
+    font-weight:700;
+}
+
+.admin-logo i{
+    margin-right:8px;
+}
+
+.back-btn{
+    color:#fff;
+    text-decoration:none;
+    background:rgba(255,255,255,.15);
+    padding:9px 15px;
+    border-radius:7px;
+}
+
+.back-btn:hover{
+    background:rgba(255,255,255,.25);
+}
+
+/* =========================================================
+   MAIN
+========================================================= */
+
+.container{
+    max-width:1250px;
+    margin:30px auto;
+    padding:0 15px;
+}
+
+/* =========================================================
+   TOP BAR
+========================================================= */
+
+.top-actions{
+    background:#fff;
+    border-radius:10px;
+    padding:20px;
+    margin-bottom:20px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:15px;
+    flex-wrap:wrap;
+    box-shadow:0 2px 10px rgba(0,0,0,.06);
+}
+
+.top-actions h1{
+    margin:0;
+    font-size:23px;
+}
+
+.button{
+    border:none;
+    border-radius:7px;
+    padding:10px 16px;
+    font-family:inherit;
+    cursor:pointer;
+    font-weight:600;
+}
+
+.button:disabled{
+    opacity:.6;
+    cursor:not-allowed;
+}
+
+.add-btn{
+    background:#f85606;
+    color:#fff;
+}
+
+.add-btn:hover{
+    background:#e64d00;
+}
+
+.reset-btn{
+    background:#eee;
+    color:#333;
+}
+
+.reset-btn:hover{
+    background:#ddd;
+}
+
+/* =========================================================
+   PRODUCT EDITOR
+========================================================= */
+
+.product-editor{
+    background:#fff;
+    border-radius:12px;
+    margin-bottom:25px;
+    box-shadow:0 2px 10px rgba(0,0,0,.06);
+    overflow:hidden;
+}
+
+.editor-header{
+    padding:16px 20px;
+    background:#fafafa;
+    border-bottom:1px solid #eee;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:15px;
+}
+
+.editor-title{
+    font-weight:700;
+}
+
+.delete-btn{
+    border:none;
+    background:#ffe8e8;
+    color:#d00;
+    padding:8px 12px;
+    border-radius:6px;
+    cursor:pointer;
+}
+
+.delete-btn:hover{
+    background:#ffd5d5;
+}
+
+.editor-body{
+    padding:20px;
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:18px;
+}
+
+.field{
+    display:flex;
+    flex-direction:column;
+    gap:6px;
+}
+
+.field.full{
+    grid-column:1/-1;
+}
+
+.field label{
+    font-size:13px;
+    font-weight:600;
+}
+
+.field input,
+.field select,
+.field textarea{
+    width:100%;
+    border:1px solid #ddd;
+    border-radius:7px;
+    padding:10px;
+    font-family:inherit;
+    outline:none;
+}
+
+.field input:focus,
+.field select:focus,
+.field textarea:focus{
+    border-color:#f85606;
+    box-shadow:0 0 0 3px rgba(248,86,6,.08);
+}
+
+.field textarea{
+    min-height:90px;
+    resize:vertical;
+}
+
+/* =========================================================
+   CHECKBOXES
+========================================================= */
+
+.checkbox-group{
+    grid-column:1/-1;
+    display:flex;
+    gap:25px;
+    flex-wrap:wrap;
+}
+
+.checkbox{
+    display:flex;
+    align-items:center;
+    gap:7px;
+    font-size:13px;
+    font-weight:600;
+}
+
+/* =========================================================
+   IMAGE PREVIEW
+========================================================= */
+
+.image-preview{
+    width:120px;
+    height:120px;
+    object-fit:cover;
+    border-radius:8px;
+    background:#f5f5f5;
+    border:1px solid #eee;
+    margin-top:8px;
+}
+
+/* =========================================================
+   SAVE
+========================================================= */
+
+.editor-footer{
+    padding:15px 20px;
+    border-top:1px solid #eee;
+    display:flex;
+    justify-content:flex-end;
+}
+
+.save-btn{
+    background:#168a3d;
+    color:#fff;
+}
+
+.save-btn:hover{
+    background:#126e31;
+}
+
+/* =========================================================
+   TOAST
+========================================================= */
+
+.toast{
+    position:fixed;
+    bottom:25px;
+    right:25px;
+    background:#222;
+    color:#fff;
+    padding:12px 18px;
+    border-radius:7px;
+    opacity:0;
+    pointer-events:none;
+    transform:translateY(20px);
+    transition:.3s;
+    z-index:10000;
+    max-width:420px;
+}
+
+.toast.show{
+    opacity:1;
+    transform:translateY(0);
+}
+
+.toast.success{
+    background:#168a3d;
+}
+
+.toast.error{
+    background:#c62828;
+}
+
+/* =========================================================
+   ADMIN LOGIN
+========================================================= */
+
+.auth-overlay{
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,.72);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    z-index:9999;
+    padding:20px;
+}
+
+.auth-card{
+    width:min(430px,100%);
+    background:#fff;
+    border-radius:18px;
+    padding:32px;
+    text-align:center;
+    box-shadow:0 25px 80px rgba(0,0,0,.3);
+}
+
+.auth-card h2{
+    margin:0 0 10px;
+    font-size:28px;
+    color:#111;
+}
+
+.auth-card p{
+    margin:0 0 24px;
+    color:#666;
+    line-height:1.6;
+}
+
+.auth-input{
+    width:100%;
+    border:1px solid #ddd;
+    background:#fff;
+    color:#222;
+    padding:13px 14px;
+    border-radius:10px;
+    font-size:15px;
+    margin-bottom:12px;
+    outline:none;
+}
+
+.auth-input:focus{
+    border-color:#ff4d00;
+    box-shadow:0 0 0 3px rgba(255,77,0,.10);
+}
+
+.email-login-btn{
+    width:100%;
+    border:0;
+    background:#ff4d00;
+    color:#fff;
+    padding:13px 18px;
+    border-radius:10px;
+    font-size:16px;
+    font-weight:700;
+    cursor:pointer;
+}
+
+.email-login-btn:hover{
+    background:#e94400;
+}
+
+.email-login-btn:disabled{
+    opacity:.6;
+    cursor:not-allowed;
+}
+
+.auth-status{
+    margin-top:14px;
+    font-size:14px;
+    color:#666;
+    min-height:20px;
+    line-height:1.5;
+}
+
+.auth-error{
+    color:#c62828;
+}
+
+.auth-success{
+    color:#168a3d;
+}
+
+/* =========================================================
+   ADMIN USER
+========================================================= */
+
+.admin-user{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    margin-right:10px;
+    font-size:13px;
+    color:#fff;
+}
+
+.logout-btn{
+    border:0;
+    background:#fff;
+    color:#d32f2f;
+    cursor:pointer;
+    font-weight:600;
+    padding:9px 12px;
+    border-radius:8px;
+}
+
+.logout-btn:hover{
+    background:#fff0f0;
+}
+
+/* =========================================================
+   LOADING
+========================================================= */
+
+.loading-box{
+    background:#fff;
+    padding:30px;
+    text-align:center;
+    border-radius:12px;
+    color:#666;
+    box-shadow:0 2px 10px rgba(0,0,0,.06);
+}
+
+.loading-box i{
+    font-size:25px;
+    margin-bottom:10px;
+}
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media(max-width:800px){
+
+    .editor-body{
+        grid-template-columns:1fr;
+    }
+
+    .field.full{
+        grid-column:auto;
+    }
+
+    .checkbox-group{
+        grid-column:auto;
+    }
+
+    .admin-header-inner{
+        align-items:flex-start;
+        flex-direction:column;
+    }
+
+    .admin-user{
+        margin-right:0;
+        flex-wrap:wrap;
+    }
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<!-- =========================================================
+     LOGIN
+========================================================= -->
+
+<div class="auth-overlay" id="adminAuthOverlay">
+
+    <div class="auth-card">
+
+        <h2>ToyMart Admin</h2>
+
+        <p>
+            Enter your Firebase admin email and password
+            to manage products and categories.
+        </p>
+
+        <form id="adminLoginForm" autocomplete="on">
+
+            <input
+                class="auth-input"
+                id="adminEmailInput"
+                type="email"
+                placeholder="Admin email"
+                autocomplete="username"
+                required>
+
+            <input
+                class="auth-input"
+                id="adminPasswordInput"
+                type="password"
+                placeholder="Password"
+                autocomplete="current-password"
+                required>
+
+            <button
+                class="email-login-btn"
+                id="emailLoginBtn"
+                type="submit">
+
+                Login to Admin
+
+            </button>
+
+        </form>
+
+        <div
+            class="auth-status"
+            id="authStatus">
+
+            Admin login required.
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- =========================================================
+     HEADER
+========================================================= -->
+
+<header class="admin-header">
+
+    <div class="admin-header-inner">
+
+        <div class="admin-logo">
+
+            <i class="fa-solid fa-cubes"></i>
+
+            ToyMart Admin
+
+        </div>
+
+        <a
+            href="index.html"
+            class="back-btn">
+
+            <i class="fa-solid fa-arrow-left"></i>
+
+            View Store
+
+        </a>
+
+    </div>
+
+</header>
+
+
+<!-- =========================================================
+     MAIN
+========================================================= -->
+
+<main class="container">
+
+    <div class="top-actions">
+
+        <h1>
+            Product Management
+        </h1>
+
+        <div>
+
+            <button
+                class="button add-btn"
+                id="addProduct">
+
+                <i class="fa-solid fa-plus"></i>
+
+                Add Product
+
+            </button>
+
+            <button
+                class="button reset-btn"
+                id="resetProducts">
+
+                Reset Products
+
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <div id="productsContainer">
+
+        <div class="loading-box">
+
+            <i class="fa-solid fa-spinner fa-spin"></i>
+
+            <div>
+                Loading products...
+            </div>
+
+        </div>
+
+    </div>
+
+</main>
+
+
+<!-- =========================================================
+     TOAST
+========================================================= -->
+
+<div
+    class="toast"
+    id="toast">
+
+    Saved
+
+</div>
+
+
+<script>
+
+/* =========================================================
+   FIREBASE CONFIG
+========================================================= */
+
+const firebaseConfig = {
+
+    apiKey:
+        "AIzaSyD0blS4BoWoFDKIjj6vi6G4FImcG1eL2cs",
+
+    authDomain:
+        "muneeb-create.firebaseapp.com",
+
+    projectId:
+        "muneeb-create",
+
+    storageBucket:
+        "muneeb-create.firebasestorage.app",
+
+    messagingSenderId:
+        "735729704184",
+
+    appId:
+        "1:735729704184:web:d155a351ab325ca26aef0d",
+
+    measurementId:
+        "G-XBFZ29341E"
+
+};
+
+
+/* =========================================================
+   FIREBASE INITIALIZE
+========================================================= */
+
+firebase.initializeApp(firebaseConfig);
+
+const db = firebase.firestore();
+
+const auth = firebase.auth();
+
+
+/* =========================================================
+   COLLECTIONS
+========================================================= */
+
+const PRODUCTS_COLLECTION =
+    "toymart_products";
+
+const STORE_DOC =
+    "store/main";
+
+
+/* =========================================================
+   ADMIN
+========================================================= */
+
+const ADMIN_EMAIL =
+    "mohammadmuneeb484@gmail.com";
+
+let currentAdminUser = null;
+
+
+/* =========================================================
+   DEFAULT PRODUCTS
+========================================================= */
+
+const DEFAULT_PRODUCTS = [
+
+    {
+        id:1,
+        name:"Remote Control Racing Car",
+        category:"Cars",
+        price:2499,
+        oldPrice:3500,
+        rating:4.8,
+        reviews:126,
+        stock:25,
+        image:"images/1.jpg",
+        brand:"ToyMart",
+        age:"5+",
+        description:
+            "High-speed remote control racing car for kids with powerful wheels and colorful design.",
+        freeDelivery:true,
+        bestSeller:true,
+        flashSale:true,
+        sold:72,
+        createdAt:Date.now()
+    },
+
+    {
+        id:2,
+        name:"Baby Musical Toy",
+        category:"Girls Toys",
+        price:1299,
+        oldPrice:1800,
+        rating:4.7,
+        reviews:84,
+        stock:40,
+        image:"images/1.jpg",
+        brand:"KidsFun",
+        age:"1-3",
+        description:
+            "Colorful musical toy designed to entertain babies while helping develop sensory skills.",
+        freeDelivery:true,
+        bestSeller:true,
+        flashSale:true,
+        sold:61,
+        createdAt:Date.now()
+    },
+
+    {
+        id:3,
+        name:"Educational Building Blocks",
+        category:"other",
+        price:1799,
+        oldPrice:2500,
+        rating:4.9,
+        reviews:213,
+        stock:30,
+        image:"images/1.jpg",
+        brand:"BuildKids",
+        age:"4+",
+        description:
+            "Creative building block set that helps children develop imagination and problem-solving skills.",
+        freeDelivery:true,
+        bestSeller:true,
+        flashSale:false,
+        sold:88,
+        createdAt:Date.now()
+    },
+
+    {
+        id:4,
+        name:"Princess Doll Set",
+        category:"Girls Toys",
+        price:1999,
+        oldPrice:2800,
+        rating:4.6,
+        reviews:91,
+        stock:18,
+        image:"images/1.jpg",
+        brand:"DreamKids",
+        age:"3+",
+        description:
+            "Beautiful princess doll set with accessories for imaginative play.",
+        freeDelivery:false,
+        bestSeller:true,
+        flashSale:true,
+        sold:57,
+        createdAt:Date.now()
+    },
+
+    {
+        id:5,
+        name:"Toy Kitchen Set",
+        category:"Girls Toys",
+        price:2299,
+        oldPrice:3200,
+        rating:4.7,
+        reviews:67,
+        stock:15,
+        image:"images/1.jpg",
+        brand:"Little Chef",
+        age:"3+",
+        description:
+            "Colorful pretend kitchen set for creative role play and learning.",
+        freeDelivery:true,
+        bestSeller:false,
+        flashSale:true,
+        sold:43,
+        createdAt:Date.now()
+    }
+
+];
+
+
+/* =========================================================
+   CATEGORIES
+========================================================= */
+
+const CATEGORIES = [
+
+    "Cars",
+    "Helicopters",
+    "Jets",
+    "Guns",
+    "Girls Toys",
+    "Cell Operated",
+    "other"
+
+];
+
+
+/* =========================================================
+   AUTH STATUS
+========================================================= */
+
+function setAuthStatus(message,isError=false){
+
+    const el =
+        document.getElementById("authStatus");
+
+    if(!el) return;
+
+    el.textContent = message;
+
+    el.classList.toggle(
+        "auth-error",
+        isError
+    );
+
+    el.classList.toggle(
+        "auth-success",
+        !isError
+    );
+
+}
+
+
+/* =========================================================
+   HEADER ADMIN USER
+========================================================= */
+
+function updateAdminHeader(user){
+
+    const inner =
+        document.querySelector(
+            ".admin-header-inner"
+        );
+
+    if(!inner || !user) return;
+
+    let box =
+        document.getElementById(
+            "adminUserBox"
+        );
+
+    if(!box){
+
+        box =
+            document.createElement("div");
+
+        box.id =
+            "adminUserBox";
+
+        box.className =
+            "admin-user";
+
+        inner.insertBefore(
+            box,
+            inner.querySelector(".back-btn")
+        );
+
+    }
+
+    box.innerHTML = `
+
+        <span>
+            <i class="fa-solid fa-circle-check"></i>
+            ${escapeHTML(user.email || "")}
+        </span>
+
+        <button
+            class="logout-btn"
+            id="logoutBtn">
+
+            Logout
+
+        </button>
+
+    `;
+
+    document
+        .getElementById("logoutBtn")
+        .onclick = () => auth.signOut();
+
+}
+
+
+/* =========================================================
+   LOGIN
+========================================================= */
+
+document
+.getElementById("adminLoginForm")
+.addEventListener(
+    "submit",
+    async event => {
+
+        event.preventDefault();
+
+        const email =
+            document
+            .getElementById(
+                "adminEmailInput"
+            )
+            .value
+            .trim()
+            .toLowerCase();
+
+        const password =
+            document
+            .getElementById(
+                "adminPasswordInput"
+            )
+            .value;
+
+        const button =
+            document
+            .getElementById(
+                "emailLoginBtn"
+            );
+
+
+        if(!email || !password){
+
+            setAuthStatus(
+                "Enter your email and password.",
+                true
+            );
+
+            return;
+
+        }
+
+
+        try{
+
+            button.disabled = true;
+
+            button.textContent =
+                "Logging in...";
+
+            setAuthStatus(
+                "Checking login...",
+                false
+            );
+
+
+            const result =
+                await auth.signInWithEmailAndPassword(
+                    email,
+                    password
+                );
+
+
+            console.log(
+                "LOGIN SUCCESS:",
+                result.user.email
+            );
+
+            console.log(
+                "EMAIL VERIFIED:",
+                result.user.emailVerified
+            );
+
+            /*
+               IMPORTANT:
+
+               We intentionally DO NOT check
+               user.emailVerified here.
+
+               A manually-created Firebase user
+               can be unverified and still use
+               this admin panel.
+            */
+
+
+        }
+
+        catch(error){
+
+            console.error(
+                "LOGIN ERROR:",
+                error
+            );
+
+            let message =
+                "Login failed.";
+
+            if(
+                error.code ===
+                "auth/invalid-credential"
+            ){
+
+                message =
+                    "Incorrect email or password.";
+
+            }
+
+            else if(
+                error.code ===
+                "auth/wrong-password"
+            ){
+
+                message =
+                    "Incorrect password.";
+
+            }
+
+            else if(
+                error.code ===
+                "auth/user-not-found"
+            ){
+
+                message =
+                    "This email is not registered in Firebase Authentication.";
+
+            }
+
+            else if(
+                error.code ===
+                "auth/invalid-email"
+            ){
+
+                message =
+                    "Please enter a valid email address.";
+
+            }
+
+            else if(
+                error.code ===
+                "auth/too-many-requests"
+            ){
+
+                message =
+                    "Too many login attempts. Please wait and try again.";
+
+            }
+
+            else{
+
+                message =
+                    error.message ||
+                    "Login failed.";
+
+            }
+
+            setAuthStatus(
+                message,
+                true
+            );
+
+        }
+
+        finally{
+
+            button.disabled = false;
+
+            button.textContent =
+                "Login to Admin";
+
+        }
+
+    }
+);
+
+
+/* =========================================================
+   AUTH STATE
+========================================================= */
+
+auth.onAuthStateChanged(
+    async user => {
+
+        const overlay =
+            document.getElementById(
+                "adminAuthOverlay"
+            );
+
+
+        currentAdminUser =
+            user || null;
+
+
+        /* =================================================
+           NO USER
+        ================================================= */
+
+        if(!user){
+
+            overlay.style.display =
+                "flex";
+
+            setAuthStatus(
+                "Admin login required.",
+                false
+            );
+
+            return;
+
+        }
+
+
+        console.log(
+            "AUTH USER:",
+            user.email
+        );
+
+        console.log(
+            "EMAIL VERIFIED:",
+            user.emailVerified
+        );
+
+
+        /* =================================================
+           CHECK ADMIN EMAIL
+        ================================================= */
+
+        if(
+            !user.email ||
+            user.email.toLowerCase() !==
+            ADMIN_EMAIL
+        ){
+
+            console.error(
+                "Unauthorized admin email:",
+                user.email
+            );
+
+            setAuthStatus(
+                "This account is not authorized as ToyMart admin.",
+                true
+            );
+
+            await auth.signOut();
+
+            return;
+
+        }
+
+
+        /*
+        ====================================================
+        IMPORTANT CHANGE
+
+        We NO LONGER check:
+
+        if(!user.emailVerified)
+
+        Therefore:
+
+        Firebase manually-created account
+        + Unverified email
+        + Correct Gmail/password
+
+        = ALLOWED INTO ADMIN PANEL
+        ====================================================
+        */
+
+
+        document.body
+            .classList
+            .remove("auth-locked");
+
+
+        overlay.style.display =
+            "none";
+
+
+        updateAdminHeader(user);
+
+
+        await loadAdminData();
+
+    }
+);
+
+
+/* =========================================================
+   PRODUCTS
+========================================================= */
+
+let products =
+    JSON.parse(
+        JSON.stringify(
+            DEFAULT_PRODUCTS
+        )
+    );
+
+
+/* =========================================================
+   LOAD ADMIN DATA
+========================================================= */
+
+async function loadAdminData(){
+
+    const container =
+        document.getElementById(
+            "productsContainer"
+        );
+
+    container.innerHTML = `
+
+        <div class="loading-box">
+
+            <i class="fa-solid fa-spinner fa-spin"></i>
+
+            <div>
+                Loading products from Firebase...
+            </div>
+
+        </div>
+
+    `;
+
+
+    try{
+
+        console.log(
+            "Loading products from Firebase..."
+        );
+
+
+        const [
+            productSnapshot,
+            storeSnapshot
+        ] = await Promise.all([
+
+            db
+            .collection(
+                PRODUCTS_COLLECTION
+            )
+            .get(),
+
+            db
+            .doc(
+                STORE_DOC
+            )
+            .get()
+
+        ]);
+
+
+        console.log(
+            "Products found:",
+            productSnapshot.size
+        );
+
+
+        /* =================================================
+           PRODUCTS
+        ================================================= */
+
+        if(productSnapshot.empty){
+
+            console.log(
+                "No products found. Creating defaults..."
+            );
+
+            products =
+                JSON.parse(
+                    JSON.stringify(
+                        DEFAULT_PRODUCTS
+                    )
+                );
+
+
+            const saved =
+                await saveProducts();
+
+
+            if(!saved){
+
+                throw new Error(
+                    "Firebase rejected creation of default products."
+                );
+
+            }
+
+        }
+
+        else{
+
+            products =
+                productSnapshot.docs.map(
+                    doc => ({
+
+                        id:Number(doc.id),
+
+                        ...doc.data()
+
+                    })
+                );
+
+
+            products.sort(
+                (a,b) =>
+                    Number(a.id) -
+                    Number(b.id)
+            );
+
+        }
+
+
+        /* =================================================
+           STORE / CATEGORIES
+        ================================================= */
+
+        if(
+            storeSnapshot.exists &&
+            Array.isArray(
+                storeSnapshot.data().categories
+            ) &&
+            storeSnapshot.data().categories.length
+        ){
+
+            CATEGORIES.splice(
+                0,
+                CATEGORIES.length,
+                ...storeSnapshot
+                    .data()
+                    .categories
+                    .filter(Boolean)
+            );
+
+        }
+
+        else{
+
+            console.log(
+                "Creating default categories..."
+            );
+
+            const categoryData = {
+
+                categories:CATEGORIES
+
+            };
+
+
+            await db
+                .doc(STORE_DOC)
+                .set(
+                    categoryData,
+                    {merge:true}
+                );
+
+        }
+
+
+        /* =================================================
+           FIX INVALID CATEGORIES
+        ================================================= */
+
+        products =
+            products.map(
+                p => ({
+
+                    ...p,
+
+                    category:
+                        CATEGORIES.includes(
+                            p.category
+                        )
+                        ? p.category
+                        : "other"
+
+                })
+            );
+
+
+        renderProducts();
+
+
+        console.log(
+            "ADMIN DATA LOADED SUCCESSFULLY"
+        );
+
+    }
+
+    catch(error){
+
+        console.error(
+            "LOAD FIREBASE ERROR:",
+            error
+        );
+
+        container.innerHTML = `
+
+            <div class="loading-box">
+
+                <i
+                    class="fa-solid fa-triangle-exclamation"
+                    style="color:#c62828;">
+                </i>
+
+                <div style="color:#c62828;font-weight:600;">
+                    Firebase error
+                </div>
+
+                <div style="margin-top:8px;font-size:13px;">
+                    ${escapeHTML(error.message)}
+                </div>
+
+            </div>
+
+        `;
+
+        showToast(
+            "Firebase error: " +
+            error.message,
+            true
+        );
+
+    }
+
+}
+
+
+/* =========================================================
+   SAVE PRODUCTS TO FIREBASE
+========================================================= */
+
+async function saveProducts(){
+
+    if(!currentAdminUser){
+
+        showToast(
+            "Please login first.",
+            true
+        );
+
+        return false;
+
+    }
+
+
+    console.log(
+        "================================="
+    );
+
+    console.log(
+        "STARTING FIREBASE SAVE"
+    );
+
+    console.log(
+        "Admin:",
+        currentAdminUser.email
+    );
+
+    console.log(
+        "Email verified:",
+        currentAdminUser.emailVerified
+    );
+
+
+    /* =================================================
+       CHECK ADMIN EMAIL ONLY
+    ================================================= */
+
+    if(
+        !currentAdminUser.email ||
+        currentAdminUser.email.toLowerCase() !==
+        ADMIN_EMAIL
+    ){
+
+        console.error(
+            "WRONG ADMIN EMAIL"
+        );
+
+        showToast(
+            "Wrong admin account.",
+            true
+        );
+
+        return false;
+
+    }
+
+
+    /*
+    ====================================================
+    IMPORTANT:
+
+    We DO NOT check emailVerified here.
+
+    Manual Firebase users are allowed.
+    ====================================================
+    */
+
+
+    try{
+
+        const snapshot =
+            await db
+            .collection(
+                PRODUCTS_COLLECTION
+            )
+            .get();
+
+
+        console.log(
+            "Existing Firebase products:",
+            snapshot.size
+        );
+
+
+        const batch =
+            db.batch();
+
+
+        /* =================================================
+           DELETE OLD PRODUCTS
+        ================================================= */
+
+        snapshot.docs.forEach(
+            doc => {
+
+                batch.delete(
+                    doc.ref
+                );
+
+            }
+        );
+
+
+        /* =================================================
+           WRITE CURRENT PRODUCTS
+        ================================================= */
+
+        products.forEach(
+            product => {
+
+                const productRef =
+                    db
+                    .collection(
+                        PRODUCTS_COLLECTION
+                    )
+                    .doc(
+                        String(product.id)
+                    );
+
+
+                batch.set(
+                    productRef,
+                    {
+                        ...product
+                    }
+                );
+
+            }
+        );
+
+
+        /* =================================================
+           SAVE CATEGORIES
+        ================================================= */
+
+        batch.set(
+
+            db.doc(
+                STORE_DOC
+            ),
+
+            {
+                categories:
+                    CATEGORIES
+            },
+
+            {
+                merge:true
+            }
+
+        );
+
+
+        /* =================================================
+           COMMIT
+        ================================================= */
+
+        await batch.commit();
+
+
+        console.log(
+            "FIREBASE SAVE SUCCESS"
+        );
+
+
+        return true;
+
+    }
+
+    catch(error){
+
+        console.error(
+            "================================="
+        );
+
+        console.error(
+            "FIREBASE SAVE FAILED"
+        );
+
+        console.error(
+            "Error code:",
+            error.code
+        );
+
+        console.error(
+            "Error message:",
+            error.message
+        );
+
+        console.error(
+            "Full error:",
+            error
+        );
+
+        showToast(
+            "Firebase SAVE ERROR: " +
+            error.message,
+            true
+        );
+
+
+        return false;
+
+    }
+
+}
+
+
+/* =========================================================
+   RENDER PRODUCTS
+========================================================= */
+
+function renderProducts(){
+
+    const container =
+        document.getElementById(
+            "productsContainer"
+        );
+
+
+    container.innerHTML = "";
+
+
+    if(!products.length){
+
+        container.innerHTML = `
+
+            <div class="loading-box">
+
+                No products found.
+
+            </div>
+
+        `;
+
+        return;
+
+    }
+
+
+    products.forEach(
+        product => {
+
+            container.insertAdjacentHTML(
+                "beforeend",
+                createEditor(product)
+            );
+
+        }
+    );
+
+}
+
+
+/* =========================================================
+   CREATE PRODUCT EDITOR
+========================================================= */
+
+function createEditor(product){
+
+    return `
+
+        <section
+            class="product-editor"
+            data-editor="${product.id}">
+
+
+            <div class="editor-header">
+
+                <div class="editor-title">
+
+                    Product #${product.id}
+
+                </div>
+
+
+                <button
+                    class="delete-btn"
+                    onclick="deleteProduct(${product.id})">
+
+                    <i class="fa-solid fa-trash"></i>
+
+                    Delete
+
+                </button>
+
+            </div>
+
+
+            <div class="editor-body">
+
+
+                <!-- PRODUCT NAME -->
+
+                <div class="field">
+
+                    <label>
+                        Product Name
+                    </label>
+
+                    <input
+                        type="text"
+                        value="${escapeAttribute(product.name || "")}"
+                        data-field="name">
+
+                </div>
+
+
+                <!-- PRICE -->
+
+                <div class="field">
+
+                    <label>
+                        Price (PKR)
+                    </label>
+
+                    <input
+                        type="number"
+                        value="${Number(product.price) || 0}"
+                        data-field="price">
+
+                </div>
+
+
+                <!-- OLD PRICE -->
+
+                <div class="field">
+
+                    <label>
+                        Old Price (PKR)
+                    </label>
+
+                    <input
+                        type="number"
+                        value="${Number(product.oldPrice) || 0}"
+                        data-field="oldPrice">
+
+                </div>
+
+
+                <!-- IMAGE -->
+
+                <div class="field">
+
+                    <label>
+                        Image Link
+                    </label>
+
+                    <input
+                        type="text"
+                        value="${escapeAttribute(product.image || "")}"
+                        data-field="image"
+                        class="image-input">
+
+                    <img
+                        src="${escapeAttribute(product.image || "images/1.jpg")}"
+                        class="image-preview"
+                        onerror="this.src='images/1.jpg'">
+
+                </div>
+
+
+                <!-- CATEGORY -->
+
+                <div class="field">
+
+                    <label>
+                        Category
+                    </label>
+
+                    <select data-field="category">
+
+                        ${CATEGORIES.map(
+                            category => `
+
+                            <option
+                                value="${escapeAttribute(category)}"
+                                ${
+                                    product.category === category
+                                    ? "selected"
+                                    : ""
+                                }>
+
+                                ${escapeHTML(category)}
+
+                            </option>
+
+                        `
+                        ).join("")}
+
+                    </select>
+
+                </div>
+
+
+                <!-- BRAND -->
+
+                <div class="field">
+
+                    <label>
+                        Brand
+                    </label>
+
+                    <input
+                        type="text"
+                        value="${escapeAttribute(product.brand || "")}"
+                        data-field="brand">
+
+                </div>
+
+
+                <!-- AGE -->
+
+                <div class="field">
+
+                    <label>
+                        Age
+                    </label>
+
+                    <input
+                        type="text"
+                        value="${escapeAttribute(product.age || "")}"
+                        data-field="age">
+
+                </div>
+
+
+                <!-- STOCK -->
+
+                <div class="field">
+
+                    <label>
+                        Stock
+                    </label>
+
+                    <input
+                        type="number"
+                        value="${Number(product.stock) || 0}"
+                        data-field="stock">
+
+                </div>
+
+
+                <!-- RATING -->
+
+                <div class="field">
+
+                    <label>
+                        Rating
+                    </label>
+
+                    <input
+                        type="number"
+                        step="0.1"
+                        min="0"
+                        max="5"
+                        value="${Number(product.rating) || 0}"
+                        data-field="rating">
+
+                </div>
+
+
+                <!-- REVIEWS -->
+
+                <div class="field">
+
+                    <label>
+                        Reviews
+                    </label>
+
+                    <input
+                        type="number"
+                        value="${Number(product.reviews) || 0}"
+                        data-field="reviews">
+
+                </div>
+
+
+                <!-- SOLD -->
+
+                <div class="field">
+
+                    <label>
+                        Sold
+                    </label>
+
+                    <input
+                        type="number"
+                        value="${Number(product.sold) || 0}"
+                        data-field="sold">
+
+                </div>
+
+
+                <!-- DESCRIPTION -->
+
+                <div class="field full">
+
+                    <label>
+                        Description
+                    </label>
+
+                    <textarea
+                        data-field="description">${escapeHTML(product.description || "")}</textarea>
+
+                </div>
+
+
+                <!-- CHECKBOXES -->
+
+                <div class="checkbox-group">
+
+
+                    <label class="checkbox">
+
+                        <input
+                            type="checkbox"
+                            data-field="freeDelivery"
+                            ${
+                                product.freeDelivery
+                                ? "checked"
+                                : ""
+                            }>
+
+                        Free Delivery
+
+                    </label>
+
+
+                    <label class="checkbox">
+
+                        <input
+                            type="checkbox"
+                            data-field="bestSeller"
+                            ${
+                                product.bestSeller
+                                ? "checked"
+                                : ""
+                            }>
+
+                        Best Seller
+
+                    </label>
+
+
+                    <label class="checkbox">
+
+                        <input
+                            type="checkbox"
+                            data-field="flashSale"
+                            ${
+                                product.flashSale
+                                ? "checked"
+                                : ""
+                            }>
+
+                        Show Sold Progress
+
+                    </label>
+
+
+                </div>
+
+
+            </div>
+
+
+            <div class="editor-footer">
+
+                <button
+                    class="button save-btn"
+                    onclick="saveProduct(${product.id})">
+
+                    <i class="fa-solid fa-floppy-disk"></i>
+
+                    Save Product
+
+                </button>
+
+            </div>
+
+
+        </section>
+
+    `;
+
+}
+
+
+/* =========================================================
+   SAVE ONE PRODUCT
+========================================================= */
+
+async function saveProduct(id){
+
+    const editor =
+        document.querySelector(
+            `[data-editor="${id}"]`
+        );
+
+
+    const product =
+        products.find(
+            p => Number(p.id) === Number(id)
+        );
+
+
+    if(!editor || !product){
+
+        showToast(
+            "Product not found.",
+            true
+        );
+
+        return;
+
+    }
+
+
+    const originalProduct =
+        JSON.parse(
+            JSON.stringify(product)
+        );
+
+
+    /* =================================================
+       READ FORM VALUES
+    ================================================= */
+
+    editor
+    .querySelectorAll("[data-field]")
+    .forEach(
+        field => {
+
+            const key =
+                field.dataset.field;
+
+
+            if(
+                field.type ===
+                "checkbox"
+            ){
+
+                product[key] =
+                    field.checked;
+
+            }
+
+            else if(
+                field.type ===
+                "number"
+            ){
+
+                product[key] =
+                    Number(field.value);
+
+            }
+
+            else{
+
+                product[key] =
+                    field.value;
+
+            }
+
+        }
+    );
+
+
+    /* =================================================
+       SAVE
+    ================================================= */
+
+    const saved =
+        await saveProducts();
+
+
+    if(saved){
+
+        showToast(
+            "Product saved successfully!",
+            false
+        );
+
+    }
+
+    else{
+
+        Object.assign(
+            product,
+            originalProduct
+        );
+
+        renderProducts();
+
+        showToast(
+            "Product was NOT saved to Firebase.",
+            true
+        );
+
+    }
+
+}
+
+
+/* =========================================================
+   DELETE PRODUCT
+========================================================= */
+
+async function deleteProduct(id){
+
+    if(
+        !confirm(
+            "Are you sure you want to delete this product?"
+        )
+    ){
+
+        return;
+
+    }
+
+
+    const oldProducts =
+        JSON.parse(
+            JSON.stringify(products)
+        );
+
+
+    products =
+        products.filter(
+            product =>
+                Number(product.id) !==
+                Number(id)
+        );
+
+
+    const saved =
+        await saveProducts();
+
+
+    if(saved){
+
+        renderProducts();
+
+        showToast(
+            "Product deleted.",
+            false
+        );
+
+    }
+
+    else{
+
+        products =
+            oldProducts;
+
+        renderProducts();
+
+        showToast(
+            "Delete failed. Firebase rejected the change.",
+            true
+        );
+
+    }
+
+}
+
+
+/* =========================================================
+   ADD PRODUCT
+========================================================= */
+
+document
+.getElementById("addProduct")
+.addEventListener(
+    "click",
+    async () => {
+
+
+        if(!currentAdminUser){
+
+            showToast(
+                "Please login first.",
+                true
+            );
+
+            return;
+
+        }
+
+
+        const newId =
+            products.length
+
+            ? Math.max(
+                ...products.map(
+                    p =>
+                        Number(p.id) || 0
+                )
+            ) + 1
+
+            : 1;
+
+
+        const newProduct = {
+
+            id:newId,
+
+            name:"New Toy",
+
+            category:
+                CATEGORIES.includes("Cars")
+                ? "Cars"
+                : CATEGORIES[0],
+
+            price:1000,
+
+            oldPrice:1200,
+
+            rating:5,
+
+            reviews:0,
+
+            stock:10,
+
+            image:"images/1.jpg",
+
+            brand:"ToyMart",
+
+            age:"3+",
+
+            description:
+                "Add product description here.",
+
+            freeDelivery:true,
+
+            bestSeller:false,
+
+            flashSale:false,
+
+            sold:0,
+
+            createdAt:Date.now()
+
+        };
+
+
+        products.push(
+            newProduct
+        );
+
+
+        const saved =
+            await saveProducts();
+
+
+        if(!saved){
+
+            products =
+                products.filter(
+                    p =>
+                        Number(p.id) !==
+                        Number(newId)
+                );
+
+            renderProducts();
+
+            showToast(
+                "New product was NOT saved.",
+                true
+            );
+
+            return;
+
+        }
+
+
+        renderProducts();
+
+
+        setTimeout(
+            () => {
+
+                document
+                .querySelector(
+                    `[data-editor="${newId}"]`
+                )
+                ?.scrollIntoView({
+                    behavior:"smooth"
+                });
+
+            },
+            100
+        );
+
+
+        showToast(
+            "New product added.",
+            false
+        );
+
+    }
+);
+
+
+/* =========================================================
+   RESET PRODUCTS
+========================================================= */
+
+document
+.getElementById("resetProducts")
+.addEventListener(
+    "click",
+    async () => {
+
+
+        if(
+            !confirm(
+                "Reset all products to the original products?"
+            )
+        ){
+
+            return;
+
+        }
+
+
+        const oldProducts =
+            JSON.parse(
+                JSON.stringify(
+                    products
+                )
+            );
+
+
+        products =
+            JSON.parse(
+                JSON.stringify(
+                    DEFAULT_PRODUCTS
+                )
+            );
+
+
+        const saved =
+            await saveProducts();
+
+
+        if(saved){
+
+            renderProducts();
+
+            showToast(
+                "Products reset.",
+                false
+            );
+
+        }
+
+        else{
+
+            products =
+                oldProducts;
+
+            renderProducts();
+
+            showToast(
+                "Reset failed. Firebase rejected the change.",
+                true
+            );
+
+        }
+
+    }
+);
+
+
+/* =========================================================
+   IMAGE PREVIEW
+========================================================= */
+
+document.addEventListener(
+    "input",
+    event => {
+
+        if(
+            event.target.dataset.field ===
+            "image"
+        ){
+
+            const input =
+                event.target;
+
+
+            const editor =
+                input.closest(
+                    ".product-editor"
+                );
+
+
+            if(!editor) return;
+
+
+            const preview =
+                editor.querySelector(
+                    ".image-preview"
+                );
+
+
+            if(preview){
+
+                preview.src =
+                    input.value;
+
+            }
+
+        }
+
+    }
+);
+
+
+/* =========================================================
+   HELPERS
+========================================================= */
+
+function escapeHTML(value){
+
+    return String(value)
+        .replace(
+            /[&<>"']/g,
+            character => ({
+
+                "&":"&amp;",
+                "<":"&lt;",
+                ">":"&gt;",
+                '"':"&quot;",
+                "'":"&#039;"
+
+            })[character]
+        );
+
+}
+
+
+function escapeAttribute(value){
+
+    return escapeHTML(value);
+
+}
+
+
+/* =========================================================
+   TOAST
+========================================================= */
+
+let toastTimer;
+
+
+function showToast(
+    message,
+    isError=false
+){
+
+    const toast =
+        document.getElementById(
+            "toast"
+        );
+
+
+    toast.textContent =
+        message;
+
+
+    toast.classList.remove(
+        "success",
+        "error"
+    );
+
+
+    toast.classList.add(
+        isError
+        ? "error"
+        : "success"
+    );
+
+
+    toast.classList.add(
+        "show"
+    );
+
+
+    clearTimeout(
+        toastTimer
+    );
+
+
+    toastTimer =
+        setTimeout(
+            () => {
+
+                toast.classList.remove(
+                    "show"
+                );
+
+            },
+            4000
+        );
+
+}
+
+
+/* =========================================================
+   FIREBASE STARTUP TEST
+========================================================= */
+
+console.log(
+    "ToyMart Admin Firebase initialized."
+);
+
+console.log(
+    "Project:",
+    firebaseConfig.projectId
+);
+
+console.log(
+    "Products collection:",
+    PRODUCTS_COLLECTION
+);
+
+console.log(
+    "Store document:",
+    STORE_DOC
+);
+
+console.log(
+    "Expected admin:",
+    ADMIN_EMAIL
+);
+
+</script>
+
+</body>
+</html>

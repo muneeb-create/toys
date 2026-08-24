@@ -1,0 +1,2189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>ToyMart - Online Toy Store</title>
+
+<meta name="description"
+content="Shop toys online with ToyMart. Cars, dolls, educational toys, remote control toys, games and more.">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap"
+rel="stylesheet">
+
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+<link rel="stylesheet" href="style.css">
+
+
+
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+
+</head>
+
+<body>
+
+
+<!-- =========================================================
+     DESKTOP HEADER
+========================================================= -->
+
+<header class="top-header">
+
+    <div class="header-main">
+
+        <a href="index.html" class="logo">
+
+            <i class="fa-solid fa-cubes"></i>
+
+            ToyMart
+
+        </a>
+
+
+        <div class="search-box">
+
+            <input
+                type="search"
+                id="desktopSearch"
+                placeholder="Search for toys, cars, dolls and more..."
+                autocomplete="off"
+            >
+
+            <button
+                class="search-btn"
+                id="desktopSearchBtn">
+
+                <i class="fa-solid fa-search"></i>
+
+            </button>
+
+        </div>
+
+
+        <div class="header-actions">
+
+            <!-- FAVORITES -->
+
+            <button
+                class="header-favorite"
+                id="desktopFavorites"
+                aria-label="Favorites">
+
+                <i class="fa-solid fa-heart"></i>
+
+                <span
+                    class="favorite-count"
+                    id="favoriteCountDesktop">
+                    0
+                </span>
+
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <nav class="category-nav" id="desktopCategoryNav">
+        <!-- Loaded from admin.html categories in localStorage. -->
+    </nav>
+
+</header>
+
+
+
+<!-- =========================================================
+     MOBILE HEADER
+========================================================= -->
+
+<header class="mobile-header">
+
+    <div class="mobile-top">
+
+        <i class="fa-solid fa-bars" id="mobileMenu"></i>
+
+
+        <a href="index.html" class="mobile-logo">
+
+            <i class="fa-solid fa-cubes"></i>
+
+            ToyMart
+
+        </a>
+
+
+        <div class="mobile-icons">
+
+            <button
+                class="header-favorite"
+                id="mobileFavorites">
+
+                <i class="fa-solid fa-heart"></i>
+
+                <span
+                    class="favorite-count"
+                    id="favoriteCountMobile">
+                    0
+                </span>
+
+            </button>
+
+
+            <span
+                class="cart-icon"
+                id="mobileCart">
+
+                <i class="fa-brands fa-whatsapp"></i>
+
+            </span>
+
+        </div>
+
+    </div>
+
+
+    <div class="mobile-search">
+
+        <input
+            type="search"
+            id="mobileSearch"
+            placeholder="Search toys..."
+            autocomplete="off"
+        >
+
+        <button id="mobileSearchBtn">
+
+            <i class="fa-solid fa-search"></i>
+
+        </button>
+
+    </div>
+
+
+    <div class="mobile-categories" id="mobileCategoryNav">
+        <!-- Loaded from admin.html categories in localStorage. -->
+    </div>
+
+</header>
+
+
+
+<!-- =========================================================
+     MAIN
+========================================================= -->
+
+<main>
+
+
+<!-- HERO -->
+
+<section class="hero">
+
+    <div class="hero-content">
+
+        <h1>Big Toy Sale!</h1>
+
+        <p>
+            Discover amazing toys for kids of every age.
+            Fun, learning and adventure all in one place.
+        </p>
+
+        <button class="hero-btn" id="heroShopBtn">
+            Shop Now
+        </button>
+
+    </div>
+
+
+    <div class="hero-image">
+        🧸
+    </div>
+
+</section>
+
+
+
+<!-- =========================================================
+     ALL PRODUCTS
+========================================================= -->
+
+<section class="section">
+
+    <div class="section-header">
+
+        <h2
+            class="section-title"
+            id="productsTitle">
+
+            Just For You
+
+        </h2>
+
+
+        <button
+            class="view-more"
+            id="sortButton">
+
+            Popular
+
+            <i class="fa-solid fa-chevron-down"></i>
+
+        </button>
+
+    </div>
+
+
+    <div
+        class="product-grid"
+        id="productGrid">
+
+    </div>
+
+</section>
+
+</main>
+
+
+
+<!-- =========================================================
+     FAVORITES OVERLAY
+========================================================= -->
+
+<div
+    class="favorites-overlay"
+    id="favoritesOverlay">
+</div>
+
+
+
+<!-- =========================================================
+     FAVORITES PANEL
+========================================================= -->
+
+<aside
+    class="favorites-panel"
+    id="favoritesPanel">
+
+    <div class="favorites-header">
+
+        <h3>
+
+            <i class="fa-solid fa-heart"></i>
+
+            My Favorites
+
+        </h3>
+
+
+        <button
+            class="close-favorites"
+            id="closeFavorites">
+
+            <i class="fa-solid fa-xmark"></i>
+
+        </button>
+
+    </div>
+
+
+    <div
+        class="favorites-list"
+        id="favoritesList">
+
+    </div>
+
+</aside>
+
+
+
+<!-- =========================================================
+     IMAGE MODAL
+========================================================= -->
+
+<div
+    class="image-modal"
+    id="imageModal">
+
+    <div class="image-modal-content">
+
+        <button
+            class="image-modal-close"
+            id="imageModalClose">
+
+            <i class="fa-solid fa-xmark"></i>
+
+        </button>
+
+
+        <img
+            src=""
+            alt=""
+            id="imageModalImg"
+        >
+
+
+        <p id="imageModalName"></p>
+
+    </div>
+
+</div>
+
+
+
+<!-- =========================================================
+     TOAST
+========================================================= -->
+
+<div
+    class="toast"
+    id="toast">
+
+    Notification
+
+</div>
+
+
+
+<!-- =========================================================
+     FOOTER
+========================================================= -->
+
+<footer class="site-footer">
+
+    <div class="footer-container">
+
+
+        <div class="footer-brand">
+
+            <h2>
+
+                <i class="fa-solid fa-cubes"></i>
+
+                ToyMart
+
+            </h2>
+
+
+            <p>
+
+                Your friendly online toy store.
+                Discover exciting toys for kids of every age,
+                from remote control cars and dolls to educational
+                toys, games and much more.
+
+            </p>
+
+        </div>
+
+
+        <div class="footer-column">
+
+            <h3>Quick Links</h3>
+
+            <a href="index.html">
+                Home
+            </a>
+
+            <a href="#productGrid">
+                Products
+            </a>
+
+            <a href="admin.html" class="admin-link">
+                Admin Panel
+            </a>
+
+        </div>
+
+
+        <div class="footer-column">
+
+            <h3>Contact Us</h3>
+
+            <a href="mailto:zaid@gmail.com">
+
+                <i class="fa-solid fa-envelope"></i>
+
+                zaid@gmail.com
+
+            </a>
+
+
+            <a
+                href="https://wa.me/923343199086"
+                target="_blank">
+
+                <i class="fa-brands fa-whatsapp"></i>
+
+                03343199086
+
+            </a>
+
+        </div>
+
+    </div>
+
+
+    <div class="footer-bottom">
+
+        © 2026 ToyMart. All Rights Reserved.
+
+    </div>
+
+</footer>
+
+
+
+<script>
+/* ================= FIREBASE ================= */
+const firebaseConfig = {
+  apiKey: "AIzaSyD0blS4BoWoFDKIjj6vi6G4FImcG1eL2cs",
+  authDomain: "muneeb-create.firebaseapp.com",
+  projectId: "muneeb-create",
+  storageBucket: "muneeb-create.firebasestorage.app",
+  messagingSenderId: "735729704184",
+  appId: "1:735729704184:web:d155a351ab325ca26aef0d",
+  measurementId: "G-XBFZ29341E"
+};
+firebase.initializeApp(firebaseConfig);
+const db=firebase.firestore();
+const PRODUCTS_COLLECTION="toymart_products";
+const STORE_DOC="store/main";
+
+// CUSTOMER STORE: this page only reads products/categories from Firestore.
+// Customer interactions such as favorites/cart remain local to the browser.
+// Firestore Security Rules below also block all customer writes. 
+
+
+/* =========================================================
+   TOYMART
+   MAIN JAVASCRIPT
+========================================================= */
+
+
+/* =========================================================
+   WHATSAPP
+========================================================= */
+
+const WHATSAPP_NUMBER = "923343199086";
+
+
+/* =========================================================
+   CATEGORIES
+========================================================= */
+
+const CATEGORY_STORAGE_KEY="toymart_categories";
+
+// Firebase is the source of truth. Keep a safe empty/local fallback
+// only until Firestore sends the real categories.
+let storeCategories=[];
+
+function getStoreCategories(){
+    if(Array.isArray(storeCategories) && storeCategories.length){
+        return storeCategories.filter(Boolean);
+    }
+
+    try{
+        const saved=localStorage.getItem(CATEGORY_STORAGE_KEY);
+        if(saved){
+            const parsed=JSON.parse(saved);
+            if(Array.isArray(parsed) && parsed.length){
+                return parsed.filter(Boolean);
+            }
+        }
+    }catch(error){}
+
+    return [
+        "Cars",
+        "Helicopters",
+        "Jets",
+        "Guns",
+        "Girls Toys",
+        "Cell Operated",
+        "other"
+    ];
+}
+
+
+/* =========================================================
+   PRODUCTS
+========================================================= */
+
+// Do NOT depend on DEFAULT_PRODUCTS here. Products come from Firestore.
+let products=[];
+let firebaseUnsubscribeProducts=null;
+let firebaseUnsubscribeStore=null;
+
+function renderHeaderCategories(){
+
+    storeCategories=getStoreCategories();
+
+    const categories=[
+        "All Toys",
+        ...storeCategories.filter(
+            category=>category!=="All Toys"
+        )
+    ];
+
+    const desktop=
+        document.getElementById(
+            "desktopCategoryNav"
+        );
+
+    const mobile=
+        document.getElementById(
+            "mobileCategoryNav"
+        );
+
+    if(desktop){
+        desktop.innerHTML=categories.map(
+            category=>`
+                <button
+                    data-category="${escapeAttribute(category)}">
+                    ${category==="All Toys"
+                        ?"All Categories"
+                        :escapeHTML(category)}
+                </button>
+            `
+        ).join("");
+    }
+
+    if(mobile){
+        mobile.innerHTML=categories.map(
+            category=>`
+                <button
+                    data-category="${escapeAttribute(category)}">
+                    ${category==="All Toys"
+                        ?"All"
+                        :escapeHTML(category)}
+                </button>
+            `
+        ).join("");
+    }
+}
+
+
+/* =========================================================
+   LOCAL STORAGE HELPERS
+========================================================= */
+
+function loadJSON(key, fallback){
+    try{
+        const raw=localStorage.getItem(key);
+        if(raw===null) return fallback;
+        const parsed=JSON.parse(raw);
+        return parsed ?? fallback;
+    }catch(error){
+        console.warn("ToyMart: localStorage read failed:", key, error);
+        return fallback;
+    }
+}
+
+function saveJSON(key, value){
+    try{
+        localStorage.setItem(key, JSON.stringify(value));
+    }catch(error){
+        console.warn("ToyMart: localStorage write failed:", key, error);
+    }
+}
+
+
+/* =========================================================
+   FAVORITES
+========================================================= */
+
+let favorites=loadJSON(
+    "toymart_favorites",
+    []
+);
+
+
+/* =========================================================
+   STATE
+========================================================= */
+
+let activeCategory="All Toys";
+
+let currentSearch="";
+
+let currentSort="popular";
+
+
+/* =========================================================
+   INITIALIZE
+========================================================= */
+
+document.addEventListener(
+"DOMContentLoaded",
+()=>{
+
+    renderHeaderCategories();
+    renderProducts();
+    updateFavoriteCount();
+    setupEvents();
+
+    // Start Firebase AFTER the page and all functions are ready.
+    startFirebaseSync();
+
+});
+
+
+/* =========================================================
+   FIREBASE REAL-TIME SYNC
+========================================================= */
+
+function normalizeFirebaseProduct(doc){
+    const data=doc.data() || {};
+
+    return {
+        ...data,
+        id: Number(data.id ?? doc.id),
+        name: String(data.name ?? "Unnamed Toy"),
+        category: String(data.category ?? "other"),
+        price: Number(data.price ?? 0),
+        oldPrice: Number(data.oldPrice ?? 0),
+        rating: Number(data.rating ?? 0),
+        reviews: Number(data.reviews ?? 0),
+        stock: Number(data.stock ?? 0),
+        image: String(data.image ?? "images/1.jpg"),
+        brand: String(data.brand ?? "ToyMart"),
+        age: String(data.age ?? ""),
+        description: String(data.description ?? ""),
+        freeDelivery: Boolean(data.freeDelivery),
+        bestSeller: Boolean(data.bestSeller),
+        flashSale: Boolean(data.flashSale),
+        sold: Number(data.sold ?? 0),
+        createdAt: Number(data.createdAt ?? Date.now())
+    };
+}
+
+async function startFirebaseSync(){
+
+    try{
+        console.log("ToyMart: connecting to Firebase...");
+
+        // First do a one-time read. This proves the index can actually
+        // retrieve the same collection that admin.html writes to.
+        const initialSnapshot = await db
+            .collection(PRODUCTS_COLLECTION)
+            .get();
+
+        products = initialSnapshot.docs
+            .map(normalizeFirebaseProduct)
+            .sort((a,b)=>a.id-b.id);
+
+        console.log(
+            "ToyMart: Firebase initial products =",
+            products.length,
+            products
+        );
+
+        renderProducts();
+
+        // Keep the store synchronized in real time.
+        if(firebaseUnsubscribeProducts){
+            firebaseUnsubscribeProducts();
+        }
+
+        firebaseUnsubscribeProducts = db
+            .collection(PRODUCTS_COLLECTION)
+            .onSnapshot(
+                snapshot=>{
+                    products = snapshot.docs
+                        .map(normalizeFirebaseProduct)
+                        .sort((a,b)=>a.id-b.id);
+
+                    console.log(
+                        "ToyMart: Firebase realtime products =",
+                        products.length
+                    );
+
+                    renderProducts();
+                },
+                error=>{
+                    console.error(
+                        "ToyMart: realtime products error:",
+                        error
+                    );
+                    showToast(
+                        "Firebase products error: " +
+                        (error.code || "check console")
+                    );
+                }
+            );
+
+        if(firebaseUnsubscribeStore){
+            firebaseUnsubscribeStore();
+        }
+
+        firebaseUnsubscribeStore = db
+            .doc(STORE_DOC)
+            .onSnapshot(
+                snapshot=>{
+                    if(snapshot.exists){
+                        const data=snapshot.data() || {};
+
+                        if(Array.isArray(data.categories)){
+                            storeCategories=data.categories.filter(Boolean);
+
+                            localStorage.setItem(
+                                CATEGORY_STORAGE_KEY,
+                                JSON.stringify(storeCategories)
+                            );
+
+                            renderHeaderCategories();
+                        }
+                    }
+                },
+                error=>{
+                    console.error(
+                        "ToyMart: Firebase categories error:",
+                        error
+                    );
+                }
+            );
+
+    }catch(error){
+        console.error(
+            "ToyMart: Firebase initial load error:",
+            error
+        );
+
+        // Only use local data as a temporary fallback if Firebase fails.
+        try{
+            const local=JSON.parse(
+                localStorage.getItem("toymart_products") || "[]"
+            );
+
+            if(Array.isArray(local) && local.length){
+                products=local;
+                renderProducts();
+            }
+        }catch(fallbackError){}
+
+        showToast(
+            "Firebase could not load products. Open F12 → Console."
+        );
+    }
+}
+
+
+/* =========================================================
+   FILTER
+========================================================= */
+
+function getFilteredProducts(){
+
+    let result=[...products];
+
+
+    if(
+        activeCategory &&
+        activeCategory!=="All Toys"
+    ){
+
+        result=result.filter(
+            product =>
+                product.category===
+                activeCategory
+        );
+
+    }
+
+
+    if(currentSearch.trim()){
+
+        const search=
+            currentSearch
+            .trim()
+            .toLowerCase();
+
+
+        result=result.filter(product=>
+
+            product.name
+            .toLowerCase()
+            .includes(search)
+
+            ||
+
+            product.category
+            .toLowerCase()
+            .includes(search)
+
+            ||
+
+            product.brand
+            .toLowerCase()
+            .includes(search)
+
+        );
+
+    }
+
+
+    switch(currentSort){
+
+        case"price-low":
+
+            result.sort(
+                (a,b)=>a.price-b.price
+            );
+
+            break;
+
+
+        case"price-high":
+
+            result.sort(
+                (a,b)=>b.price-a.price
+            );
+
+            break;
+
+
+        case"rating":
+
+            result.sort(
+                (a,b)=>b.rating-a.rating
+            );
+
+            break;
+
+
+        case"discount":
+
+            result.sort(
+                (a,b)=>
+                    getDiscount(b)-
+                    getDiscount(a)
+            );
+
+            break;
+
+
+        case"newest":
+
+            result.sort(
+                (a,b)=>
+                    b.createdAt-
+                    a.createdAt
+            );
+
+            break;
+
+
+        default:
+
+            result.sort(
+                (a,b)=>
+                    (b.rating*b.reviews)-
+                    (a.rating*a.reviews)
+            );
+
+    }
+
+
+    return result;
+
+}
+
+
+/* =========================================================
+   RENDER PRODUCTS
+========================================================= */
+
+function renderProducts(){
+
+    const container=
+        document.getElementById(
+            "productGrid"
+        );
+
+    const title=
+        document.getElementById(
+            "productsTitle"
+        );
+
+
+    if(!container)return;
+
+
+    const result=
+        getFilteredProducts();
+
+
+    if(title){
+
+        if(currentSearch.trim()){
+
+            title.textContent=
+                `Search Results for "${currentSearch}"`;
+
+        }else if(
+            activeCategory!=="All Toys"
+        ){
+
+            title.textContent=
+                activeCategory;
+
+        }else{
+
+            title.textContent=
+                "Just For You";
+
+        }
+
+    }
+
+
+    if(!result.length){
+
+        container.innerHTML=`
+
+            <div class="no-products">
+
+                <i class="fa-solid fa-box-open"></i>
+
+                <h3>No products found</h3>
+
+                <p>
+                    Try another search or category.
+                </p>
+
+            </div>
+
+        `;
+
+        return;
+
+    }
+
+
+    container.innerHTML=
+
+        result
+        .map(product=>
+            createProductCard(product)
+        )
+        .join("");
+
+}
+
+
+/* =========================================================
+   PRODUCT CARD
+========================================================= */
+
+function createProductCard(product){
+
+    const discount=
+        getDiscount(product);
+
+
+    const isFavorite=
+        favorites.includes(product.id);
+
+
+    const soldPercentage=
+        Math.min(
+            100,
+            Math.round(
+                (
+                    product.sold/
+                    (
+                        product.sold+
+                        product.stock
+                    )
+                )*100
+            )
+        );
+
+
+    return`
+
+        <article
+            class="product-card"
+            data-product-id="${product.id}">
+
+
+            <div
+                class="product-image"
+                data-view="${product.id}">
+
+
+                <img
+                    src="${escapeAttribute(product.image)}"
+                    alt="${escapeAttribute(product.name)}"
+                    loading="lazy"
+                    onerror="this.src='images/1.jpg'">
+
+
+                <button
+                    class="favorite-btn ${isFavorite?"active":""}"
+                    data-favorite="${product.id}"
+                    aria-label="Favorite">
+
+                    <i class="${
+                        isFavorite
+                        ?"fa-solid"
+                        :"fa-regular"
+                    } fa-heart"></i>
+
+                </button>
+
+
+                <button
+                    class="eye-btn"
+                    data-view="${product.id}">
+
+                    <i class="fa-solid fa-eye"></i>
+
+                </button>
+
+
+                ${
+                    discount>0
+                    ?`
+
+                        <span
+                            style="
+                                position:absolute;
+                                top:10px;
+                                left:10px;
+                                background:#ff6900;
+                                color:#fff;
+                                padding:3px 7px;
+                                border-radius:3px;
+                                font-size:10px;
+                                z-index:3;
+                            ">
+
+                            -${discount}%
+
+                        </span>
+
+                    `
+                    :""
+                }
+
+
+            </div>
+
+
+            <div class="product-info">
+
+
+                <div class="product-name">
+
+                    ${escapeHTML(product.name)}
+
+                </div>
+
+
+                <div class="rating">
+
+                    ${renderStars(product.rating)}
+
+                    <span class="review-count">
+                        (${product.reviews})
+                    </span>
+
+                </div>
+
+
+                <div class="product-price">
+
+                    Rs. ${formatPrice(product.price)}
+
+                </div>
+
+
+                <div>
+
+                    ${
+                        product.oldPrice
+                        ?`
+
+                            <span class="old-price">
+
+                                Rs.
+                                ${formatPrice(product.oldPrice)}
+
+                            </span>
+
+                        `
+                        :""
+                    }
+
+
+                    ${
+                        discount
+                        ?`
+
+                            <span class="discount">
+
+                                -${discount}%
+
+                            </span>
+
+                        `
+                        :""
+                    }
+
+                </div>
+
+
+                ${
+                    product.freeDelivery
+                    ?`
+
+                        <span class="badge">
+
+                            Free Delivery
+
+                        </span>
+
+                    `
+                    :""
+                }
+
+
+                ${
+                    product.bestSeller
+                    ?`
+
+                        <span
+                            class="badge"
+                            style="
+                                background:#fff4d8;
+                                color:#d68a00;
+                            ">
+
+                            Best Seller
+
+                        </span>
+
+                    `
+                    :""
+                }
+
+
+                ${
+                    product.flashSale
+                    ?`
+
+                        <div
+                            style="
+                                font-size:9px;
+                                color:#777;
+                                margin-top:8px;
+                            ">
+
+                            ${soldPercentage}% sold
+
+                        </div>
+
+
+                        <div
+                            style="
+                                height:4px;
+                                background:#eee;
+                                margin-top:3px;
+                                border-radius:5px;
+                                overflow:hidden;
+                            ">
+
+                            <div
+                                style="
+                                    width:${soldPercentage}%;
+                                    height:100%;
+                                    background:#ff6900;
+                                ">
+                            </div>
+
+                        </div>
+
+                    `
+                    :""
+                }
+
+
+                <button
+                    class="add-cart chat-order"
+                    data-chat-order="${product.id}">
+
+                    <i class="fa-brands fa-whatsapp"></i>
+
+                    Chat to Order
+
+                </button>
+
+
+            </div>
+
+        </article>
+
+    `;
+
+}
+
+
+/* =========================================================
+   STARS
+========================================================= */
+
+function renderStars(rating){
+
+    const rounded=Math.round(rating);
+
+    let stars="";
+
+
+    for(
+        let i=1;
+        i<=5;
+        i++
+    ){
+
+        stars +=
+
+            i<=rounded
+
+            ?'<i class="fa-solid fa-star"></i>'
+
+            :'<i class="fa-regular fa-star"></i>';
+
+    }
+
+
+    return stars;
+
+}
+
+
+/* =========================================================
+   DISCOUNT
+========================================================= */
+
+function getDiscount(product){
+
+    if(
+        !product.oldPrice ||
+        product.oldPrice<=product.price
+    ){
+
+        return 0;
+
+    }
+
+
+    return Math.round(
+
+        (
+            (
+                product.oldPrice-
+                product.price
+            )
+            /
+            product.oldPrice
+        )*100
+
+    );
+
+}
+
+
+/* =========================================================
+   WHATSAPP PRODUCT ORDER
+========================================================= */
+
+function chatToOrder(productId){
+
+    const product=
+        products.find(
+            p=>p.id===Number(productId)
+        );
+
+
+    if(!product)return;
+
+
+    if(product.stock<=0){
+
+        showToast(
+            "This product is out of stock."
+        );
+
+        return;
+
+    }
+
+
+    const message=
+
+        `Hi, I'm interested in ordering: ${product.name} (Rs. ${formatPrice(product.price)})`;
+
+
+    const url=
+
+        `https://wa.me/${WHATSAPP_NUMBER}?text=${
+            encodeURIComponent(message)
+        }`;
+
+
+    window.open(
+        url,
+        "_blank"
+    );
+
+}
+
+
+/* =========================================================
+   IMAGE PREVIEW
+========================================================= */
+
+function openImagePreview(productId){
+
+    const product=
+        products.find(
+            p=>p.id===Number(productId)
+        );
+
+
+    if(!product)return;
+
+
+    const modal=
+        document.getElementById(
+            "imageModal"
+        );
+
+    const img=
+        document.getElementById(
+            "imageModalImg"
+        );
+
+    const name=
+        document.getElementById(
+            "imageModalName"
+        );
+
+
+    img.src=product.image;
+
+    img.alt=product.name;
+
+    name.textContent=product.name;
+
+
+    modal.classList.add("show");
+
+}
+
+
+function closeImagePreview(){
+
+    document
+        .getElementById("imageModal")
+        ?.classList.remove("show");
+
+}
+
+
+/* =========================================================
+   FAVORITES
+========================================================= */
+
+function toggleFavorite(productId){
+
+    productId=Number(productId);
+
+
+    if(
+        favorites.includes(productId)
+    ){
+
+        favorites=
+            favorites.filter(
+                id=>id!==productId
+            );
+
+        showToast(
+            "Removed from favorites"
+        );
+
+    }else{
+
+        favorites.push(productId);
+
+        showToast(
+            "Added to favorites"
+        );
+
+    }
+
+
+    saveJSON(
+        "toymart_favorites",
+        favorites
+    );
+
+
+    renderProducts();
+
+    renderFavorites();
+
+    updateFavoriteCount();
+
+}
+
+
+/* =========================================================
+   FAVORITE COUNT
+========================================================= */
+
+function updateFavoriteCount(){
+
+    const desktop=
+        document.getElementById(
+            "favoriteCountDesktop"
+        );
+
+    const mobile=
+        document.getElementById(
+            "favoriteCountMobile"
+        );
+
+
+    if(desktop)
+        desktop.textContent=
+            favorites.length;
+
+
+    if(mobile)
+        mobile.textContent=
+            favorites.length;
+
+}
+
+
+/* =========================================================
+   FAVORITES PANEL
+========================================================= */
+
+function openFavorites(){
+
+    renderFavorites();
+
+    document
+        .getElementById("favoritesPanel")
+        ?.classList.add("show");
+
+    document
+        .getElementById("favoritesOverlay")
+        ?.classList.add("show");
+
+}
+
+
+function closeFavorites(){
+
+    document
+        .getElementById("favoritesPanel")
+        ?.classList.remove("show");
+
+    document
+        .getElementById("favoritesOverlay")
+        ?.classList.remove("show");
+
+}
+
+
+function renderFavorites(){
+
+    const container=
+        document.getElementById(
+            "favoritesList"
+        );
+
+
+    if(!container)return;
+
+
+    const favoriteProducts=
+        products.filter(
+            product =>
+                favorites.includes(product.id)
+        );
+
+
+    if(!favoriteProducts.length){
+
+        container.innerHTML=`
+
+            <div class="empty-favorites">
+
+                <i class="fa-regular fa-heart"></i>
+
+                <h3>No Favorites Yet</h3>
+
+                <p>
+                    Tap the heart on any toy
+                    to save it here.
+                </p>
+
+            </div>
+
+        `;
+
+        return;
+
+    }
+
+
+    container.innerHTML=
+
+        favoriteProducts
+        .map(product=>`
+
+            <div class="favorite-item">
+
+                <img
+                    src="${escapeAttribute(product.image)}"
+                    alt="${escapeAttribute(product.name)}"
+                    onerror="this.src='images/1.jpg'">
+
+
+                <div class="favorite-item-info">
+
+                    <div class="favorite-item-name">
+
+                        ${escapeHTML(product.name)}
+
+                    </div>
+
+
+                    <div class="favorite-item-price">
+
+                        Rs. ${formatPrice(product.price)}
+
+                    </div>
+
+
+                    <button
+                        class="chat-order"
+                        style="
+                            border:none;
+                            padding:5px 8px;
+                            margin-top:7px;
+                            border-radius:4px;
+                            cursor:pointer;
+                        "
+                        data-chat-order="${product.id}">
+
+                        <i class="fa-brands fa-whatsapp"></i>
+
+                        Order
+
+                    </button>
+
+                </div>
+
+
+                <button
+                    class="remove-favorite"
+                    data-favorite="${product.id}">
+
+                    <i class="fa-solid fa-trash"></i>
+
+                </button>
+
+            </div>
+
+        `)
+        .join("");
+
+}
+
+
+/* =========================================================
+   SEARCH
+========================================================= */
+
+function performSearch(value){
+
+    currentSearch=value.trim();
+
+    activeCategory="All Toys";
+
+
+    const desktop=
+        document.getElementById(
+            "desktopSearch"
+        );
+
+    const mobile=
+        document.getElementById(
+            "mobileSearch"
+        );
+
+
+    if(desktop)
+        desktop.value=value;
+
+
+    if(mobile)
+        mobile.value=value;
+
+
+    renderProducts();
+
+}
+
+
+/* =========================================================
+   CATEGORY
+========================================================= */
+
+function selectCategory(category){
+
+    activeCategory=category;
+
+    currentSearch="";
+
+
+    const desktop=
+        document.getElementById(
+            "desktopSearch"
+        );
+
+    const mobile=
+        document.getElementById(
+            "mobileSearch"
+        );
+
+
+    if(desktop)
+        desktop.value="";
+
+
+    if(mobile)
+        mobile.value="";
+
+
+    renderProducts();
+
+
+    document
+        .getElementById("productGrid")
+        ?.scrollIntoView({
+            behavior:"smooth"
+        });
+
+}
+
+
+/* =========================================================
+   SORT
+========================================================= */
+
+function changeSort(){
+
+    const options=[
+
+        {
+            label:"Popular",
+            value:"popular"
+        },
+
+        {
+            label:"Newest",
+            value:"newest"
+        },
+
+        {
+            label:"Price Low to High",
+            value:"price-low"
+        },
+
+        {
+            label:"Price High to Low",
+            value:"price-high"
+        },
+
+        {
+            label:"Highest Rated",
+            value:"rating"
+        },
+
+        {
+            label:"Biggest Discount",
+            value:"discount"
+        }
+
+    ];
+
+
+    const currentIndex=
+        options.findIndex(
+            option =>
+                option.value===currentSort
+        );
+
+
+    const next=
+        options[
+            (currentIndex+1)%
+            options.length
+        ];
+
+
+    currentSort=next.value;
+
+
+    const button=
+        document.getElementById(
+            "sortButton"
+        );
+
+
+    if(button){
+
+        button.innerHTML=`
+
+            ${next.label}
+
+            <i class="fa-solid fa-chevron-down"></i>
+
+        `;
+
+    }
+
+
+    renderProducts();
+
+}
+
+
+/* =========================================================
+   GENERAL WHATSAPP
+========================================================= */
+
+function openWhatsAppChat(){
+
+    const url=
+
+        `https://wa.me/${WHATSAPP_NUMBER}?text=${
+            encodeURIComponent(
+                "Hi, I'd like to know more about your toys."
+            )
+        }`;
+
+
+    window.open(
+        url,
+        "_blank"
+    );
+
+}
+
+
+/* =========================================================
+   TOAST
+========================================================= */
+
+let toastTimer;
+
+
+function showToast(message){
+
+    const toast=
+        document.getElementById(
+            "toast"
+        );
+
+
+    if(!toast)return;
+
+
+    toast.textContent=message;
+
+    toast.classList.add("show");
+
+
+    clearTimeout(toastTimer);
+
+
+    toastTimer=setTimeout(
+        ()=>{
+            toast.classList.remove("show");
+        },
+        2500
+    );
+
+}
+
+
+/* =========================================================
+   EVENTS
+========================================================= */
+
+function setupEvents(){
+
+
+    /* DESKTOP SEARCH */
+
+    const desktopSearch=
+        document.getElementById(
+            "desktopSearch"
+        );
+
+
+    desktopSearch?.addEventListener(
+        "input",
+        event=>
+            performSearch(event.target.value)
+    );
+
+
+    /* MOBILE SEARCH */
+
+    const mobileSearch=
+        document.getElementById(
+            "mobileSearch"
+        );
+
+
+    mobileSearch?.addEventListener(
+        "input",
+        event=>
+            performSearch(event.target.value)
+    );
+
+
+    /* SEARCH BUTTONS */
+
+    document
+        .getElementById("desktopSearchBtn")
+        ?.addEventListener(
+            "click",
+            ()=>{
+                performSearch(
+                    desktopSearch.value
+                );
+            }
+        );
+
+
+    document
+        .getElementById("mobileSearchBtn")
+        ?.addEventListener(
+            "click",
+            ()=>{
+                performSearch(
+                    mobileSearch.value
+                );
+            }
+        );
+
+
+    /* CATEGORY */
+
+    document.addEventListener(
+        "click",
+        event=>{
+
+
+            const categoryButton=
+                event.target.closest(
+                    "[data-category]"
+                );
+
+
+            if(categoryButton){
+
+                selectCategory(
+                    categoryButton.dataset.category
+                );
+
+                return;
+
+            }
+
+
+            /* FAVORITE */
+
+            const favoriteButton=
+                event.target.closest(
+                    "[data-favorite]"
+                );
+
+
+            if(favoriteButton){
+
+                event.stopPropagation();
+
+                toggleFavorite(
+                    favoriteButton.dataset.favorite
+                );
+
+                return;
+
+            }
+
+
+            /* CHAT */
+
+            const chatButton=
+                event.target.closest(
+                    "[data-chat-order]"
+                );
+
+
+            if(chatButton){
+
+                event.stopPropagation();
+
+                chatToOrder(
+                    chatButton.dataset.chatOrder
+                );
+
+                return;
+
+            }
+
+
+            /* IMAGE */
+
+            const viewButton=
+                event.target.closest(
+                    "[data-view]"
+                );
+
+
+            if(viewButton){
+
+                event.stopPropagation();
+
+                openImagePreview(
+                    viewButton.dataset.view
+                );
+
+            }
+
+        }
+    );
+
+
+    /* FAVORITES */
+
+    document
+        .getElementById("desktopFavorites")
+        ?.addEventListener(
+            "click",
+            openFavorites
+        );
+
+
+    document
+        .getElementById("mobileFavorites")
+        ?.addEventListener(
+            "click",
+            openFavorites
+        );
+
+
+    document
+        .getElementById("closeFavorites")
+        ?.addEventListener(
+            "click",
+            closeFavorites
+        );
+
+
+    document
+        .getElementById("favoritesOverlay")
+        ?.addEventListener(
+            "click",
+            closeFavorites
+        );
+
+
+    /* IMAGE MODAL */
+
+    document
+        .getElementById("imageModalClose")
+        ?.addEventListener(
+            "click",
+            closeImagePreview
+        );
+
+
+    document
+        .getElementById("imageModal")
+        ?.addEventListener(
+            "click",
+            event=>{
+
+                if(
+                    event.target.id===
+                    "imageModal"
+                ){
+
+                    closeImagePreview();
+
+                }
+
+            }
+        );
+
+
+    /* HERO */
+
+    document
+        .getElementById("heroShopBtn")
+        ?.addEventListener(
+            "click",
+            ()=>{
+
+                activeCategory="All Toys";
+
+                currentSearch="";
+
+                renderProducts();
+
+
+                document
+                    .getElementById(
+                        "productGrid"
+                    )
+                    ?.scrollIntoView({
+                        behavior:"smooth"
+                    });
+
+            }
+        );
+
+
+    /* SORT */
+
+    document
+        .getElementById("sortButton")
+        ?.addEventListener(
+            "click",
+            changeSort
+        );
+
+
+    /* MOBILE WHATSAPP */
+
+    document
+        .getElementById("mobileCart")
+        ?.addEventListener(
+            "click",
+            openWhatsAppChat
+        );
+
+
+    /* MOBILE MENU */
+
+    document
+        .getElementById("mobileMenu")
+        ?.addEventListener(
+            "click",
+            ()=>{
+                showToast(
+                    "Menu will be available soon."
+                );
+            }
+        );
+
+
+}
+
+
+/* =========================================================
+   HELPERS
+========================================================= */
+
+function formatPrice(price){
+
+    return Number(price)
+        .toLocaleString("en-PK");
+
+}
+
+
+function escapeHTML(value){
+
+    return String(value)
+        .replace(
+            /[&<>"']/g,
+            character=>({
+
+                "&":"&amp;",
+                "<":"&lt;",
+                ">":"&gt;",
+                '"':"&quot;",
+                "'":"&#039;"
+
+            })[character]
+        );
+
+}
+
+
+function escapeAttribute(value){
+
+    return escapeHTML(value);
+
+}
+
+
+/* =========================================================
+   FUTURE ACCESS
+========================================================= */
+
+window.ToyMart={
+
+    getProducts:
+        ()=>products,
+
+    getFavorites:
+        ()=>favorites,
+
+    saveProducts:
+        newProducts=>{
+
+            products=newProducts;
+
+            saveJSON(
+                "toymart_products",
+                products
+            );
+
+            renderProducts();
+
+            renderFavorites();
+
+        },
+
+    chatToOrder,
+
+    toggleFavorite
+
+};
+
+</script>
+
+</body>
+</html>
